@@ -1,18 +1,10 @@
 defmodule Automatand do
-  @moduledoc """
-  Documentation for `Automatand`.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Automatand.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def automatasetter([]), do: [[]]
+  def automatasetter([h|t])do
+    rest = automatasetter(t)
+    automatasetter(h,rest,rest)
   end
+
+  defp automatasetter(_, [], acc), do: acc
+  defp automatasetter(x, [h|t], acc), do: automatasetter(x,t, [[x|h] | acc])
 end
