@@ -7,4 +7,13 @@ defmodule Automatand do
 
   defp automatasetter(_, [], acc), do: acc
   defp automatasetter(x, [h|t], acc), do: automatasetter(x,t, [[x|h] | acc])
+
+  def determinize(n) do
+    estados = automatasetter(n.states)
+    for estado <- estados, transicion <- n.alpha do
+    {{estado, transicion},
+    Enum.map(estado, fn conjunto -> n.delta[{conjunto, transicion}] end)}
+    end
+  end
+
 end
