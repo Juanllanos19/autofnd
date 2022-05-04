@@ -12,9 +12,13 @@ defmodule Automatand do
     estados = automatasetter(n.states)
     for estado <- estados, transicion <- n.alpha do
     {{estado, transicion},
-    Enum.map(estado, fn conjunto -> n.delta[{conjunto, transicion}]   end) |> List.flatten}
+      Enum.map(estado, fn conjunto -> n.delta[{conjunto, transicion}] end)
+      |> List.flatten
+    }
     end
   end
 
-
+  #def e_clousure(n, {}) do
+    #
+  #end
 end
