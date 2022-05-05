@@ -47,42 +47,45 @@ defmodule Automatand do
 
   def deltaput(n) do
     estados = automatasetter(n.states)
+    deltav =
     for estado <- estados, transicion <- n.alpha do
       {{estado, transicion},
         Enum.map(estado, fn conjunto -> n.delta[{conjunto, transicion}] end)
         |> List.flatten
       }
     end
+    {estados,deltav}
   end
 
   def determinize(n) do
-    deltav= deltaput(n)
+    {estados,deltav} = deltaput(n)
     %{
       alpha: n.alpha,
-      states: n.states,
-      istate: n.istate,
-      fstates: n.fstates,
-      delta: deltav
+      states: estados,
+      istate: [n.istate],
+      fstates: Enum.filter(estados,fn r -> Enum.any?(r, fn e->e in n.fstates end)end),
+      delta: deltav |> Map.new()
     }
 
   end
 
   def e_clousure(n, r) do
-    for r <- q do
-      e_closure2(n.delta, r, r)
-    end
+     #for q <- r do
+      Enum.reduce(r, r, fn q, acc -> e_closure2(n.delta, q, acc)
+      end)
+      |> Enum.sort()
   end
 
   def e_closure2(delta, curr, stack) do
-    Enum.map(curr, fn x -> {[x], nil}end)
-    |> Enun.reduce(stack, fn key, visitedp ->
-      x = delta[key]
-      if x != nil do
+    Enum.reduce(delta[{curr, nil}] || [], stack, fn x, visitedp ->
+      if x not in visitedp do
         e_closure2(delta, x, [x | visitedp])
       else
-        List.flatten(visitedp)
-        |> Enum.uniq
+        visitedp
+        #List.flatten(visitedp)
+        #|> Enum.uniq
       end
     end)
-  end
+
+end
 end
