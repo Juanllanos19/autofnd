@@ -67,7 +67,22 @@ defmodule Automatand do
 
   end
 
-  #def e_clousure(n, {}) do
-    #
-  #end
+  def e_clousure(n, r) do
+    for r <- q do
+      e_closure2(n.delta, r, r)
+    end
+  end
+
+  def e_closure2(delta, curr, stack) do
+    Enum.map(curr, fn x -> {[x], nil}end)
+    |> Enun.reduce(stack, fn key, visitedp ->
+      x = delta[key]
+      if x != nil do
+        e_closure2(delta, x, [x | visitedp])
+      else
+        List.flatten(visitedp)
+        |> Enum.uniq
+      end
+    end)
+  end
 end
